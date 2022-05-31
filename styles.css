@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+:root {
+	--areaWidth: 240px;
+	--areaHeight: 400px;
+	--blockWidth: 20px;
+	--blockHeight: 20px;
+	/* --fontFamily: roboto, Helvetica, sans-serif; */
+}
+
+:root {
+	font-family: roboto, Helvetica, sans-serif;
+	font-weight: 700;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+}
+
+.msg {
+	margin-bottom: 10px;
+}
+
+.game-area {
+	width: var(--areaWidth);
+	height: var(--areaHeight);
+	border: 2px solid #eee;
+	display: flex;
+	flex-wrap: wrap;
+	box-sizing: content-box;
+	padding: 5px;
+}
+
+.cell {
+	width: var(--blockWidth);
+	height: var(--blockHeight);
+	background-color: #eee;
+	border: 2px solid white;
+}
+
+.block {
+	background-color: red;
+}
+
+.block-red {
+	background-color: red;
+}
+
+.block-blue {
+	background-color: blue;
+}
+
+.block-green {
+	background-color: green;
+}
+
+.block-orange {
+	background-color: orange;
+}
+
+.block-purple {
+	background-color: purple;
+}
+
+.block-yellow {
+	background-color: yellow;
+}
+
+.block-brown {
+	background-color: brown;
+}
+
+.block-still {
+	background-color: grey;
+}
