@@ -31,6 +31,10 @@ body {
 	margin-bottom: 10px;
 }
 
+.score {
+	margin-top: 10px;
+}
+
 .game-area {
 	width: var(--areaWidth);
 	height: var(--areaHeight);

@@ -2,8 +2,10 @@ import { blocksArray } from './blocks.js';
 
 const gameArea = document.querySelector('.game-area');
 const message = document.querySelector('.msg');
+const score = document.querySelector('.score');
 
 const gameInfo = {
+	IS_GAME_OVER: true,
 	GRID: [],
 	GRID_WIDTH: 12,
 	GRID_HEIGHT: 20,
@@ -11,6 +13,7 @@ const gameInfo = {
 	CURRENT_BLOCK_COLOR: '',
 	DROP_INTERVAL_TIME: 500,
 	DROP_INTERVAL_FUNCTION: null,
+	SCORE: 0,
 };
 
 function createLookupTable(height, width) {
@@ -24,6 +27,11 @@ function createLookupTable(height, width) {
 	}
 	gameInfo.GRID = gameGrid;
 	drawGrid();
+	document.addEventListener('keydown', e => {
+		if (e.key === ' ' && gameInfo.IS_GAME_OVER) {
+			startGame();
+		}
+	});
 }
 
 function drawGrid() {
@@ -115,6 +123,7 @@ function dropBlock() {
 		gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
 			gameInfo.GRID[item.y][item.x] = 2;
 		});
+		completeLine();
 		createBlock();
 	}
 }
@@ -138,9 +147,20 @@ function moveBlockToSide(direction) {
 
 function rotateBlock() {}
 
-function completeLine() {}
+function completeLine() {
+	gameInfo.GRID.forEach((row, rowIndex) => {
+		if (row.every(value => value === 2)) {
+			gameInfo.GRID.splice(rowIndex, 1);
+			gameInfo.GRID.unshift(new Array(12).fill(0));
+			console.table(gameInfo.GRID);
+			gameInfo.SCORE++;
+			score.textContent = `Score: ${gameInfo.SCORE}`;
+		}
+	});
+}
 
 function gameOver() {
+	gameInfo.IS_GAME_OVER = true;
 	message.textContent = 'Game over!';
 	document.removeEventListener('keydown', addControls);
 	clearInterval(gameInfo.DROP_INTERVAL_FUNCTION);
@@ -168,9 +188,13 @@ function addControls(e) {
 }
 
 function startGame() {
+	gameInfo.SCORE = 0;
+	gameInfo.IS_GAME_OVER = false;
 	createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
+	message.textContent = 'Good luck!';
+	score.textContent = `Score: ${gameInfo.SCORE}`;
 	createBlock();
 	gameInfo.DROP_INTERVAL_FUNCTION = setInterval(dropBlock, gameInfo.DROP_INTERVAL_TIME);
 }
 
-startGame();
+createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
