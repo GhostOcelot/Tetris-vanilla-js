@@ -10,6 +10,8 @@ const gameInfo = {
 	GRID_WIDTH: 12,
 	GRID_HEIGHT: 20,
 	CURRENT_BLOCK_POSITION: [],
+	CURRENT_BLOCK_ROTATION: 0,
+	CURRENT_BLOCK_OFFSET: { x: 5, y: 1 },
 	CURRENT_BLOCK_COLOR: '',
 	DROP_INTERVAL_TIME: 500,
 	DROP_INTERVAL_FUNCTION: null,
@@ -28,7 +30,7 @@ function createLookupTable(height, width) {
 	gameInfo.GRID = gameGrid;
 	drawGrid();
 	document.addEventListener('keydown', e => {
-		if (e.key === ' ' && gameInfo.IS_GAME_OVER) {
+		if (e.key === 'Enter' && gameInfo.IS_GAME_OVER) {
 			startGame();
 		}
 	});
@@ -39,50 +41,24 @@ function drawGrid() {
 
 	gameInfo.GRID.forEach(column => {
 		column.forEach(item => {
+			const cell = document.createElement('div');
+			cell.classList.add('cell');
 			if (item === 0) {
-				const cell = document.createElement('div');
-				cell.classList.add('cell');
-				gameArea.append(cell);
 			} else if (item === 1) {
-				const block = document.createElement('div');
-				block.classList.add('cell');
-				switch (gameInfo.CURRENT_BLOCK_COLOR) {
-					case 'red':
-						block.classList.add('block-red');
-						break;
-					case 'blue':
-						block.classList.add('block-blue');
-						break;
-					case 'green':
-						block.classList.add('block-green');
-						break;
-					case 'orange':
-						block.classList.add('block-orange');
-						break;
-					case 'purple':
-						block.classList.add('block-purple');
-						break;
-					case 'yellow':
-						block.classList.add('block-yellow');
-						break;
-					case 'brown':
-						block.classList.add('block-brown');
-						break;
-					default:
-						break;
-				}
-				gameArea.append(block);
+				cell.classList.add(`block-${gameInfo.CURRENT_BLOCK_COLOR}`);
 			} else if (item === 2) {
-				const blockStill = document.createElement('div');
-				blockStill.classList.add('cell');
-				blockStill.classList.add('block-still');
-				gameArea.append(blockStill);
+				cell.classList.add('block-still');
 			}
+			gameArea.append(cell);
 		});
 	});
 }
 
 function createBlock() {
+	if (gameInfo.GRID[0].includes(2)) {
+		gameOver();
+		return;
+	}
 	gameInfo.CURRENT_BLOCK_POSITION = [];
 	const newKidOnTheBlock = blocksArray[Math.floor(Math.random() * blocksArray.length)];
 	gameInfo.CURRENT_BLOCK_COLOR = newKidOnTheBlock.color;
@@ -102,9 +78,7 @@ function createBlock() {
 }
 
 function dropBlock() {
-	if (gameInfo.GRID[0].includes(2)) {
-		gameOver();
-	} else if (
+	if (
 		!gameInfo.CURRENT_BLOCK_POSITION.some(item => item.y === gameInfo.GRID_HEIGHT - 1) &&
 		!gameInfo.CURRENT_BLOCK_POSITION.some(
 			item => gameInfo.GRID[item.y + 1].includes(2) && gameInfo.GRID[item.y + 1][item.x] === 2
@@ -118,41 +92,59 @@ function dropBlock() {
 			item.y++;
 			gameInfo.GRID[item.y][item.x] = 1;
 		});
+		gameInfo.CURRENT_BLOCK_OFFSET.y++;
 		drawGrid();
 	} else {
 		gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
 			gameInfo.GRID[item.y][item.x] = 2;
 		});
+		gameInfo.CURRENT_BLOCK_OFFSET = { x: 5, y: 1 };
 		completeLine();
 		createBlock();
 	}
 }
 
 function moveBlockToSide(direction) {
-	if (!gameInfo.CURRENT_BLOCK_POSITION.some(item => item.y === gameInfo.GRID_HEIGHT - 1)) {
-		gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
-			gameInfo.GRID[item.y][item.x] = 0;
-			if (direction === 'left') {
-				item.x--;
-			} else if (direction === 'right') {
-				item.x++;
-			}
-		});
-		gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
-			gameInfo.GRID[item.y][item.x] = 1;
-		});
-		drawGrid();
-	}
+	gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
+		gameInfo.GRID[item.y][item.x] = 0;
+		if (direction === 'left') {
+			item.x--;
+		} else if (direction === 'right') {
+			item.x++;
+		}
+	});
+	gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
+		gameInfo.GRID[item.y][item.x] = 1;
+	});
+	drawGrid();
 }
 
-function rotateBlock() {}
+function rotateBlock() {
+	const tempArray = [];
+	gameInfo.CURRENT_BLOCK_POSITION.forEach((item, index) => {
+		gameInfo.GRID[item.y][item.x] = 0;
+
+		const tempItem = {
+			x: -item.y + gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y,
+			y: item.x - gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y,
+		};
+		tempArray.push(tempItem);
+	});
+	gameInfo.CURRENT_BLOCK_POSITION = tempArray;
+
+	gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
+		gameInfo.GRID[item.y][item.x] = 1;
+	});
+
+	console.log(gameInfo.CURRENT_BLOCK_POSITION);
+	drawGrid();
+}
 
 function completeLine() {
 	gameInfo.GRID.forEach((row, rowIndex) => {
 		if (row.every(value => value === 2)) {
 			gameInfo.GRID.splice(rowIndex, 1);
 			gameInfo.GRID.unshift(new Array(12).fill(0));
-			console.table(gameInfo.GRID);
 			gameInfo.SCORE++;
 			score.textContent = `Score: ${gameInfo.SCORE}`;
 		}
@@ -169,22 +161,24 @@ function gameOver() {
 function addControls(e) {
 	if (e.key === 'ArrowDown') {
 		dropBlock();
-		drawGrid();
 	} else if (
 		e.key === 'ArrowLeft' &&
 		gameInfo.CURRENT_BLOCK_POSITION.every(item => item.x > 0) &&
 		gameInfo.CURRENT_BLOCK_POSITION.every(item => gameInfo.GRID[item.y][item.x - 1] !== 2)
 	) {
+		gameInfo.CURRENT_BLOCK_OFFSET.x--;
 		moveBlockToSide('left');
-		drawGrid();
 	} else if (
 		e.key === 'ArrowRight' &&
 		gameInfo.CURRENT_BLOCK_POSITION.every(item => item.x < gameInfo.GRID_WIDTH - 1) &&
 		gameInfo.CURRENT_BLOCK_POSITION.every(item => gameInfo.GRID[item.y][item.x + 1] !== 2)
 	) {
+		gameInfo.CURRENT_BLOCK_OFFSET.x++;
 		moveBlockToSide('right');
-		drawGrid();
+	} else if (e.key === ' ') {
+		rotateBlock();
 	}
+	drawGrid();
 }
 
 function startGame() {
@@ -192,6 +186,7 @@ function startGame() {
 	gameInfo.IS_GAME_OVER = false;
 	createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
 	message.textContent = 'Good luck!';
+	message.classList.remove('animated');
 	score.textContent = `Score: ${gameInfo.SCORE}`;
 	createBlock();
 	gameInfo.DROP_INTERVAL_FUNCTION = setInterval(dropBlock, gameInfo.DROP_INTERVAL_TIME);

@@ -10,7 +10,7 @@
 
 :root {
 	font-family: roboto, Helvetica, sans-serif;
-	font-weight: 700;
+	color: grey;
 }
 
 * {
@@ -28,21 +28,25 @@ body {
 }
 
 .msg {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+.animated {
+	animation: anim 3s infinite;
 }
 
 .score {
-	margin-top: 10px;
+	margin-top: 20px;
 }
 
 .game-area {
 	width: var(--areaWidth);
 	height: var(--areaHeight);
-	border: 2px solid #eee;
+	border: 7px solid grey;
 	display: flex;
 	flex-wrap: wrap;
 	box-sizing: content-box;
-	padding: 5px;
+	padding: 10px;
 }
 
 .cell {
@@ -86,4 +90,22 @@ body {
 
 .block-still {
 	background-color: grey;
+}
+
+@keyframes anim {
+	0% {
+		transform: scale(1.4) rotate(-2deg);
+	}
+	25% {
+		transform: scale(1) rotate(0deg);
+	}
+	50% {
+		transform: scale(1.4) rotate(2deg);
+	}
+	75% {
+		transform: scale(1) rotate(0deg);
+	}
+	100% {
+		transform: scale(1.4) rotate(-2deg);
+	}
 }
