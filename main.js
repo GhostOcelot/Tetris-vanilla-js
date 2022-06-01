@@ -10,10 +10,9 @@ const gameInfo = {
 	GRID_WIDTH: 12,
 	GRID_HEIGHT: 20,
 	CURRENT_BLOCK_POSITION: [],
-	CURRENT_BLOCK_ROTATION: 0,
 	CURRENT_BLOCK_OFFSET: { x: 5, y: 1 },
 	CURRENT_BLOCK_COLOR: '',
-	DROP_INTERVAL_TIME: 500,
+	DROP_INTERVAL_TIME: 1000,
 	DROP_INTERVAL_FUNCTION: null,
 	SCORE: 0,
 };
@@ -120,23 +119,42 @@ function moveBlockToSide(direction) {
 }
 
 function rotateBlock() {
-	const tempArray = [];
-	gameInfo.CURRENT_BLOCK_POSITION.forEach((item, index) => {
+	if (gameInfo.CURRENT_BLOCK_COLOR === 'yellow') {
+		return;
+	}
+	const newblocksPositionArray = [];
+	let newBlockPosition = {};
+	gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
 		gameInfo.GRID[item.y][item.x] = 0;
-
-		const tempItem = {
-			x: -item.y + gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y,
-			y: item.x - gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y,
-		};
-		tempArray.push(tempItem);
+		if (gameInfo.CURRENT_BLOCK_COLOR === 'brown') {
+			newBlockPosition = {
+				x: -item.y + gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y,
+				y: item.x - gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y - 1,
+			};
+		} else {
+			newBlockPosition = {
+				x: -item.y + gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y,
+				y: item.x - gameInfo.CURRENT_BLOCK_OFFSET.x + gameInfo.CURRENT_BLOCK_OFFSET.y,
+			};
+		}
+		newblocksPositionArray.push(newBlockPosition);
 	});
-	gameInfo.CURRENT_BLOCK_POSITION = tempArray;
 
+	if (
+		!newblocksPositionArray.some(
+			item =>
+				item.x < 0 ||
+				item.y < 0 ||
+				item.x > gameInfo.GRID_WIDTH - 1 ||
+				item.y > gameInfo.GRID_HEIGHT - 1 ||
+				gameInfo.GRID[item.y][item.x] === 2
+		)
+	) {
+		gameInfo.CURRENT_BLOCK_POSITION = newblocksPositionArray;
+	}
 	gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
 		gameInfo.GRID[item.y][item.x] = 1;
 	});
-
-	console.log(gameInfo.CURRENT_BLOCK_POSITION);
 	drawGrid();
 }
 
@@ -147,13 +165,14 @@ function completeLine() {
 			gameInfo.GRID.unshift(new Array(12).fill(0));
 			gameInfo.SCORE++;
 			score.textContent = `Score: ${gameInfo.SCORE}`;
+			speedUp();
 		}
 	});
 }
 
 function gameOver() {
 	gameInfo.IS_GAME_OVER = true;
-	message.textContent = 'Game over!';
+	(gameInfo.DROP_INTERVAL_TIME = 1000), (message.textContent = 'Game over!');
 	document.removeEventListener('keydown', addControls);
 	clearInterval(gameInfo.DROP_INTERVAL_FUNCTION);
 }
@@ -175,10 +194,17 @@ function addControls(e) {
 	) {
 		gameInfo.CURRENT_BLOCK_OFFSET.x++;
 		moveBlockToSide('right');
-	} else if (e.key === ' ') {
+	} else if (e.key === 'ArrowUp') {
 		rotateBlock();
 	}
 	drawGrid();
+}
+
+function speedUp() {
+	gameInfo.DROP_INTERVAL_TIME -= 20;
+	clearInterval(gameInfo.DROP_INTERVAL_FUNCTION);
+	gameInfo.DROP_INTERVAL_FUNCTION = setInterval(dropBlock, gameInfo.DROP_INTERVAL_TIME);
+	console.log(gameInfo.DROP_INTERVAL_TIME);
 }
 
 function startGame() {

@@ -1,16 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
 :root {
 	--areaWidth: 240px;
 	--areaHeight: 400px;
 	--blockWidth: 20px;
 	--blockHeight: 20px;
-	/* --fontFamily: roboto, Helvetica, sans-serif; */
-}
-
-:root {
-	font-family: roboto, Helvetica, sans-serif;
-	color: grey;
+	--color1: rgb(132, 136, 157);
+	--color2: rgb(255, 255, 255);
+	--color3: rgb(45, 56, 81);
+	font-family: 'Permanent Marker', cursive;
+	letter-spacing: 0.3em;
 }
 
 * {
@@ -25,87 +25,96 @@ body {
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh;
+	background-color: var(--color1);
+}
+
+h1 {
+	font-size: 40px;
+}
+
+h2 {
+	font-size: 30px;
 }
 
 .msg {
 	margin-bottom: 20px;
+	color: var(--color2);
 }
 
 .animated {
-	animation: anim 3s infinite;
+	animation: anim 4s infinite;
 }
 
 .score {
-	margin-top: 20px;
+	margin-top: 10px;
+	color: var(--color2);
+	height: 30px;
 }
 
 .game-area {
 	width: var(--areaWidth);
 	height: var(--areaHeight);
-	border: 7px solid grey;
+	border: 7px solid var(--color2);
 	display: flex;
 	flex-wrap: wrap;
 	box-sizing: content-box;
 	padding: 10px;
+	background-color: var(--color1);
 }
 
 .cell {
 	width: var(--blockWidth);
 	height: var(--blockHeight);
-	background-color: #eee;
-	border: 2px solid white;
-}
-
-.block {
-	background-color: red;
+	background-color: var(--color2);
+	border: 1px solid var(--color1);
 }
 
 .block-red {
-	background-color: red;
+	background-color: rgb(229, 10, 10);
 }
 
 .block-blue {
-	background-color: blue;
+	background-color: rgb(0, 89, 255);
 }
 
 .block-green {
-	background-color: green;
+	background-color: rgb(0, 243, 0);
 }
 
 .block-orange {
-	background-color: orange;
+	background-color: rgb(255, 166, 0);
 }
 
 .block-purple {
-	background-color: purple;
+	background-color: rgb(128, 0, 128);
 }
 
 .block-yellow {
-	background-color: yellow;
+	background-color: rgb(255, 230, 0);
 }
 
 .block-brown {
-	background-color: brown;
+	background-color: rgb(165, 42, 42);
 }
 
 .block-still {
-	background-color: grey;
+	background-color: var(--color3);
 }
 
 @keyframes anim {
 	0% {
-		transform: scale(1.4) rotate(-2deg);
+		transform: scale(1.1) rotate(-1deg);
 	}
 	25% {
 		transform: scale(1) rotate(0deg);
 	}
 	50% {
-		transform: scale(1.4) rotate(2deg);
+		transform: scale(1.1) rotate(1deg);
 	}
 	75% {
 		transform: scale(1) rotate(0deg);
 	}
 	100% {
-		transform: scale(1.4) rotate(-2deg);
+		transform: scale(1.1) rotate(-1deg);
 	}
 }
