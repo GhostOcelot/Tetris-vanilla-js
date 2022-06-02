@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Permanent+Marker&display=swap');
 
 :root {
 	--areaWidth: 240px;
@@ -9,8 +8,11 @@
 	--color1: rgb(132, 136, 157);
 	--color2: rgb(255, 255, 255);
 	--color3: rgb(45, 56, 81);
-	font-family: 'Permanent Marker', cursive;
+	--border-thickness: 7px;
+	--spacing: 15px;
+	font-family: 'Kdam Thmor Pro', sans-serif;
 	letter-spacing: 0.3em;
+	color: var(--color2);
 }
 
 * {
@@ -33,33 +35,77 @@ h1 {
 }
 
 h2 {
-	font-size: 30px;
+	font-size: 28px;
+}
+
+h3 {
+	font-size: 18px;
+}
+
+p {
+	font-size: 12px;
+	letter-spacing: 0.1em;
 }
 
 .msg {
 	margin-bottom: 20px;
-	color: var(--color2);
+	height: 80px;
 }
 
 .animated {
 	animation: anim 4s infinite;
 }
 
-.score {
-	margin-top: 10px;
-	color: var(--color2);
-	height: 30px;
+.game-container {
+	padding: var(--spacing);
+	display: flex;
+	border: var(--border-thickness) solid var(--color2);
 }
 
 .game-area {
+	border: var(--border-thickness) solid var(--color2);
+	padding: var(--spacing);
 	width: var(--areaWidth);
 	height: var(--areaHeight);
-	border: 7px solid var(--color2);
 	display: flex;
 	flex-wrap: wrap;
 	box-sizing: content-box;
-	padding: 10px;
 	background-color: var(--color1);
+}
+
+.game-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.score,
+.hi-score,
+.controls,
+.next-block {
+	width: 200px;
+	margin-left: var(--spacing);
+	border: var(--border-thickness) solid var(--color2);
+	box-sizing: content-box;
+	padding: 10px;
+	letter-spacing: 0.15em;
+}
+
+.next-block {
+	width: 80px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+}
+
+.controls {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.controls p {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .cell {
@@ -67,6 +113,11 @@ h2 {
 	height: var(--blockHeight);
 	background-color: var(--color2);
 	border: 1px solid var(--color1);
+}
+
+.label {
+	margin-left: var(--spacing);
+	margin-top: calc(var(--spacing));
 }
 
 .block-red {

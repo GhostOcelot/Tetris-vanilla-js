@@ -3,6 +3,8 @@ import { blocksArray } from './blocks.js';
 const gameArea = document.querySelector('.game-area');
 const message = document.querySelector('.msg');
 const score = document.querySelector('.score');
+const hiScore = document.querySelector('.hi-score');
+const nextBlock = document.querySelector('.next-block');
 
 const gameInfo = {
 	IS_GAME_OVER: true,
@@ -12,12 +14,16 @@ const gameInfo = {
 	CURRENT_BLOCK_POSITION: [],
 	CURRENT_BLOCK_OFFSET: { x: 5, y: 1 },
 	CURRENT_BLOCK_COLOR: '',
+	NEXT_BLOCK: null,
 	DROP_INTERVAL_TIME: 1000,
 	DROP_INTERVAL_FUNCTION: null,
 	SCORE: 0,
+	HI_SCORE: 0,
 };
 
 function createLookupTable(height, width) {
+	score.textContent = 'SCORE: 0';
+	getHiScore();
 	const gameGrid = [];
 	for (let column = 0; column < height; column++) {
 		const row = [];
@@ -29,7 +35,7 @@ function createLookupTable(height, width) {
 	gameInfo.GRID = gameGrid;
 	drawGrid();
 	document.addEventListener('keydown', e => {
-		if (e.key === 'Enter' && gameInfo.IS_GAME_OVER) {
+		if (e.key === ' ' && gameInfo.IS_GAME_OVER) {
 			startGame();
 		}
 	});
@@ -53,15 +59,33 @@ function drawGrid() {
 	});
 }
 
+function drawNextBlock() {
+	Array.from(nextBlock.children).forEach(item => item.remove());
+
+	gameInfo.NEXT_BLOCK.position.forEach(column => {
+		column.forEach(item => {
+			const cell = document.createElement('div');
+			cell.classList.add('cell');
+			if (item === 0) {
+			} else if (item === 1) {
+				cell.classList.add(`block-${gameInfo.NEXT_BLOCK.color}`);
+			} else if (item === 2) {
+				cell.classList.add('block-still');
+			}
+			nextBlock.append(cell);
+		});
+	});
+}
+
 function createBlock() {
 	if (gameInfo.GRID[0].includes(2)) {
 		gameOver();
 		return;
 	}
+
 	gameInfo.CURRENT_BLOCK_POSITION = [];
-	const newKidOnTheBlock = blocksArray[Math.floor(Math.random() * blocksArray.length)];
-	gameInfo.CURRENT_BLOCK_COLOR = newKidOnTheBlock.color;
-	newKidOnTheBlock.position.forEach((row, rowIndex) => {
+	gameInfo.CURRENT_BLOCK_COLOR = gameInfo.NEXT_BLOCK.color;
+	gameInfo.NEXT_BLOCK.position.forEach((row, rowIndex) => {
 		row.forEach((value, valueIndex) => {
 			if (value === 1) {
 				gameInfo.CURRENT_BLOCK_POSITION.push({ x: valueIndex + 4, y: rowIndex });
@@ -72,8 +96,9 @@ function createBlock() {
 	gameInfo.CURRENT_BLOCK_POSITION.forEach(item => {
 		gameInfo.GRID[item.y][item.x] = 1;
 	});
+
+	createNextBlock();
 	drawGrid();
-	document.addEventListener('keydown', addControls);
 }
 
 function dropBlock() {
@@ -100,6 +125,7 @@ function dropBlock() {
 		gameInfo.CURRENT_BLOCK_OFFSET = { x: 5, y: 1 };
 		completeLine();
 		createBlock();
+		drawNextBlock();
 	}
 }
 
@@ -164,15 +190,16 @@ function completeLine() {
 			gameInfo.GRID.splice(rowIndex, 1);
 			gameInfo.GRID.unshift(new Array(12).fill(0));
 			gameInfo.SCORE++;
-			score.textContent = `Score: ${gameInfo.SCORE}`;
+			score.textContent = `SCORE: ${gameInfo.SCORE}`;
 			speedUp();
 		}
 	});
 }
 
 function gameOver() {
+	setHiScore();
 	gameInfo.IS_GAME_OVER = true;
-	(gameInfo.DROP_INTERVAL_TIME = 1000), (message.textContent = 'Game over!');
+	(gameInfo.DROP_INTERVAL_TIME = 1000), (message.textContent = 'GAME OVER!');
 	document.removeEventListener('keydown', addControls);
 	clearInterval(gameInfo.DROP_INTERVAL_FUNCTION);
 }
@@ -201,21 +228,39 @@ function addControls(e) {
 }
 
 function speedUp() {
-	gameInfo.DROP_INTERVAL_TIME -= 20;
+	gameInfo.DROP_INTERVAL_TIME < 40
+		? (gameInfo.DROP_INTERVAL_TIME -= 20)
+		: (gameInfo.DROP_INTERVAL_TIME -= 5);
 	clearInterval(gameInfo.DROP_INTERVAL_FUNCTION);
 	gameInfo.DROP_INTERVAL_FUNCTION = setInterval(dropBlock, gameInfo.DROP_INTERVAL_TIME);
-	console.log(gameInfo.DROP_INTERVAL_TIME);
+}
+
+function getHiScore() {
+	gameInfo.HI_SCORE = localStorage.getItem('hiScore');
+	hiScore.textContent = `HI SCORE: ${gameInfo.HI_SCORE ? gameInfo.HI_SCORE : 0}`;
+}
+
+function setHiScore() {
+	gameInfo.SCORE > gameInfo.HI_SCORE ? localStorage.setItem('hiScore', gameInfo.SCORE) : null;
+	hiScore.textContent = `HI SCORE: ${gameInfo.SCORE}`;
+}
+
+function createNextBlock() {
+	gameInfo.NEXT_BLOCK = blocksArray[Math.floor(Math.random() * blocksArray.length)];
 }
 
 function startGame() {
 	gameInfo.SCORE = 0;
 	gameInfo.IS_GAME_OVER = false;
-	createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
-	message.textContent = 'Good luck!';
+	message.textContent = 'GOOD LUCK!';
 	message.classList.remove('animated');
-	score.textContent = `Score: ${gameInfo.SCORE}`;
-	createBlock();
+	score.textContent = `SCORE: ${gameInfo.SCORE}`;
+	document.addEventListener('keydown', addControls);
 	gameInfo.DROP_INTERVAL_FUNCTION = setInterval(dropBlock, gameInfo.DROP_INTERVAL_TIME);
+	createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
+	createNextBlock();
+	createBlock();
+	drawNextBlock();
 }
 
 createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
