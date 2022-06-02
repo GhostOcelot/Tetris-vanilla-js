@@ -5,9 +5,11 @@ const message = document.querySelector('.msg');
 const score = document.querySelector('.score');
 const hiScore = document.querySelector('.hi-score');
 const nextBlock = document.querySelector('.next-block');
+const messageBottom = document.querySelector('.msg-bottom');
 
 const gameInfo = {
 	IS_GAME_OVER: true,
+	IS_GAME_PAUSED: false,
 	GRID: [],
 	GRID_WIDTH: 12,
 	GRID_HEIGHT: 20,
@@ -34,15 +36,13 @@ function createLookupTable(height, width) {
 	}
 	gameInfo.GRID = gameGrid;
 	drawGrid();
-	document.addEventListener('keydown', e => {
-		if (e.key === ' ' && gameInfo.IS_GAME_OVER) {
-			startGame();
-		}
-	});
 }
 
 function drawGrid() {
 	Array.from(gameArea.children).forEach(item => item.remove());
+
+	const container = document.createElement('div');
+	container.classList.add('container');
 
 	gameInfo.GRID.forEach(column => {
 		column.forEach(item => {
@@ -54,9 +54,10 @@ function drawGrid() {
 			} else if (item === 2) {
 				cell.classList.add('block-still');
 			}
-			gameArea.append(cell);
+			container.append(cell);
 		});
 	});
+	gameArea.append(container);
 }
 
 function drawNextBlock() {
@@ -65,7 +66,7 @@ function drawNextBlock() {
 	gameInfo.NEXT_BLOCK.position.forEach(column => {
 		column.forEach(item => {
 			const cell = document.createElement('div');
-			cell.classList.add('cell');
+			cell.classList.add('next-cell');
 			if (item === 0) {
 			} else if (item === 1) {
 				cell.classList.add(`block-${gameInfo.NEXT_BLOCK.color}`);
@@ -199,7 +200,9 @@ function completeLine() {
 function gameOver() {
 	setHiScore();
 	gameInfo.IS_GAME_OVER = true;
-	(gameInfo.DROP_INTERVAL_TIME = 1000), (message.textContent = 'GAME OVER!');
+	gameInfo.DROP_INTERVAL_TIME = 1000;
+	message.textContent = 'GAME OVER!';
+	messageBottom.textContent = 'press space to play again!';
 	document.removeEventListener('keydown', addControls);
 	clearInterval(gameInfo.DROP_INTERVAL_FUNCTION);
 }
@@ -241,22 +244,47 @@ function getHiScore() {
 }
 
 function setHiScore() {
-	gameInfo.SCORE > gameInfo.HI_SCORE ? localStorage.setItem('hiScore', gameInfo.SCORE) : null;
-	hiScore.textContent = `HI SCORE: ${gameInfo.SCORE}`;
+	if (gameInfo.SCORE > gameInfo.HI_SCORE) {
+		localStorage.setItem('hiScore', gameInfo.SCORE);
+		hiScore.textContent = `HI SCORE: ${gameInfo.SCORE}`;
+	}
 }
 
 function createNextBlock() {
 	gameInfo.NEXT_BLOCK = blocksArray[Math.floor(Math.random() * blocksArray.length)];
 }
 
+function createSpacebarHandler(e) {
+	if (e.key === ' ' && gameInfo.IS_GAME_OVER) {
+		startGame();
+	} else {
+		pauseGame(e);
+	}
+}
+
+function pauseGame(e) {
+	if (e.key === ' ' && gameInfo.IS_GAME_PAUSED) {
+		gameInfo.DROP_INTERVAL_FUNCTION = setInterval(dropBlock, gameInfo.DROP_INTERVAL_TIME);
+		gameInfo.IS_GAME_PAUSED = !gameInfo.IS_GAME_PAUSED;
+		document.addEventListener('keydown', addControls);
+		messageBottom.textContent = 'Press space to pause the game';
+	} else if (e.key === ' ' && !gameInfo.IS_GAME_PAUSED) {
+		clearInterval(gameInfo.DROP_INTERVAL_FUNCTION);
+		gameInfo.IS_GAME_PAUSED = !gameInfo.IS_GAME_PAUSED;
+		document.removeEventListener('keydown', addControls);
+		messageBottom.textContent = 'PAUSE!';
+	}
+}
+
 function startGame() {
-	gameInfo.SCORE = 0;
-	gameInfo.IS_GAME_OVER = false;
 	message.textContent = 'GOOD LUCK!';
-	message.classList.remove('animated');
 	score.textContent = `SCORE: ${gameInfo.SCORE}`;
+	messageBottom.textContent = 'Press space to pause the game';
+	message.classList.remove('animated');
 	document.addEventListener('keydown', addControls);
+	gameInfo.SCORE = 0;
 	gameInfo.DROP_INTERVAL_FUNCTION = setInterval(dropBlock, gameInfo.DROP_INTERVAL_TIME);
+	gameInfo.IS_GAME_OVER = false;
 	createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
 	createNextBlock();
 	createBlock();
@@ -264,3 +292,5 @@ function startGame() {
 }
 
 createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
+
+document.addEventListener('keydown', createSpacebarHandler);

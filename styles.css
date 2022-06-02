@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&family=Permanent+Marker&display=swap');
 
 :root {
-	--areaWidth: 240px;
+	--areaWidth: 242px;
 	--areaHeight: 400px;
 	--blockWidth: 20px;
 	--blockHeight: 20px;
@@ -9,7 +9,7 @@
 	--color2: rgb(255, 255, 255);
 	--color3: rgb(45, 56, 81);
 	--border-thickness: 7px;
-	--spacing: 15px;
+	--spacing: 10px;
 	font-family: 'Kdam Thmor Pro', sans-serif;
 	letter-spacing: 0.3em;
 	color: var(--color2);
@@ -27,7 +27,7 @@ body {
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh;
-	background-color: var(--color1);
+	background-color: var(--color3);
 }
 
 h1 {
@@ -52,25 +52,37 @@ p {
 	height: 80px;
 }
 
+.msg-bottom {
+	margin-top: 20px;
+	height: 30px;
+}
+
 .animated {
 	animation: anim 4s infinite;
 }
 
 .game-container {
+	background-color: var(--color1);
 	padding: var(--spacing);
 	display: flex;
 	border: var(--border-thickness) solid var(--color2);
 }
 
-.game-area {
-	border: var(--border-thickness) solid var(--color2);
-	padding: var(--spacing);
-	width: var(--areaWidth);
-	height: var(--areaHeight);
+.container {
+	background-color: var(--color3);
+	border: 1px solid var(--color1);
 	display: flex;
 	flex-wrap: wrap;
 	box-sizing: content-box;
-	background-color: var(--color1);
+}
+
+.game-area {
+	background-color: var(--color3);
+	border: var(--border-thickness) solid var(--color2);
+	padding: 10px;
+	width: var(--areaWidth);
+	height: var(--areaHeight);
+	box-sizing: content-box;
 }
 
 .game-info {
@@ -83,6 +95,7 @@ p {
 .hi-score,
 .controls,
 .next-block {
+	background-color: var(--color3);
 	width: 200px;
 	margin-left: var(--spacing);
 	border: var(--border-thickness) solid var(--color2);
@@ -108,11 +121,17 @@ p {
 	align-items: center;
 }
 
-.cell {
+.cell,
+.next-cell {
 	width: var(--blockWidth);
 	height: var(--blockHeight);
 	background-color: var(--color2);
 	border: 1px solid var(--color1);
+}
+
+.next-cell {
+	background-color: var(--color1);
+	border: 1px solid var(--color3);
 }
 
 .label {
