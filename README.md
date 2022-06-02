@@ -3,6 +3,8 @@ I challenged myself to code a fully functionable version of the classic tetris g
 
 Live version available [here](https://third-clock.surge.sh/)
 
+***NOTE THAT IT'S A DESKTOP ONLY VERSION. I DIDN'T CREATE TOUCH CONTROLS AND RESPONSIVE LAYOUT.***
+
 ## Contains all tetris mechanics such as:
 - grid system
 - interval based game
