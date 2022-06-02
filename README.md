@@ -15,6 +15,7 @@ Live version available [here](https://third-clock.surge.sh/).
 - full rows collapse 
 - points earned for completing full rows
 - game speed increase with user progress
+- pause/resume game
 
 # Controls:
 - new game - space
