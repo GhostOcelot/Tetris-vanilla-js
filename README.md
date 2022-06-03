@@ -19,6 +19,7 @@ Live version available [here](https://third-clock.surge.sh/).
 - bonus for clearing multiple rows
 - game speed increases with player progress
 - pause/resume game
+- hi score save
 
 # Controls:
 
