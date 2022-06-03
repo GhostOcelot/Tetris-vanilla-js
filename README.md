@@ -12,9 +12,10 @@ Live version available [here](https://third-clock.surge.sh/).
 - moving blocks in 3 direction with user inputs
 - rotating blocks
 - collisions detection
-- full rows collapse 
-- points earned for completing full rows
-- game speed increase with user progress
+- full rows clearing and collapsing
+- points earned for clearing rows
+- bonus for clearing multiple rows
+- game speed increases with player progress
 - pause/resume game
 
 # Controls:
