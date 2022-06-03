@@ -293,6 +293,4 @@ function startGame() {
 	drawNextBlock();
 }
 
-createLookupTable(gameInfo.GRID_HEIGHT, gameInfo.GRID_WIDTH);
-
 document.addEventListener('keydown', createSpacebarHandler);

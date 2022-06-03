@@ -97,7 +97,7 @@ p {
 .controls,
 .next-block {
 	background-color: var(--color3);
-	width: 200px;
+	width: 205px;
 	height: 36px;
 	display: flex;
 	align-items: center;
