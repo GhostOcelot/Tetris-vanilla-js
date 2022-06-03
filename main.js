@@ -186,11 +186,13 @@ function rotateBlock() {
 }
 
 function completeLine() {
+	let bonus = 0;
 	gameInfo.GRID.forEach((row, rowIndex) => {
 		if (row.every(value => value === 2)) {
 			gameInfo.GRID.splice(rowIndex, 1);
 			gameInfo.GRID.unshift(new Array(12).fill(0));
-			gameInfo.SCORE++;
+			bonus++;
+			gameInfo.SCORE += bonus;
 			score.textContent = `SCORE: ${gameInfo.SCORE}`;
 			speedUp();
 		}
