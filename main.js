@@ -241,8 +241,10 @@ function speedUp() {
 }
 
 function getHiScore() {
-	gameInfo.HI_SCORE = localStorage.getItem('hiScore');
-	hiScore.textContent = `HI SCORE: ${gameInfo.HI_SCORE ? gameInfo.HI_SCORE : 0}`;
+	if (localStorage.getItem('hiScore')) {
+		gameInfo.HI_SCORE = localStorage.getItem('hiScore');
+	}
+	hiScore.textContent = `HI SCORE: ${gameInfo.HI_SCORE}`;
 }
 
 function setHiScore() {
@@ -294,3 +296,4 @@ function startGame() {
 }
 
 document.addEventListener('keydown', createSpacebarHandler);
+getHiScore();
