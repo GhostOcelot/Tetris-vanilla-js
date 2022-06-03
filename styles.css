@@ -48,13 +48,14 @@ p {
 }
 
 .msg {
-	margin-bottom: 20px;
-	height: 80px;
+	margin: 20px 0;
+	text-align: center;
 }
 
 .msg-bottom {
 	margin-top: 20px;
-	height: 30px;
+	height: 80px;
+	text-align: center;
 }
 
 .animated {
@@ -97,6 +98,9 @@ p {
 .next-block {
 	background-color: var(--color3);
 	width: 200px;
+	height: 36px;
+	display: flex;
+	align-items: center;
 	margin-left: var(--spacing);
 	border: var(--border-thickness) solid var(--color2);
 	box-sizing: content-box;
@@ -106,11 +110,13 @@ p {
 
 .next-block {
 	width: 80px;
+	height: 58px;
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
 }
 
 .controls {
+	/* width: 160px; */
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 }
@@ -186,5 +192,37 @@ p {
 	}
 	100% {
 		transform: scale(1.1) rotate(-1deg);
+	}
+}
+
+@media (max-width: 600px) {
+	.game-container {
+		flex-direction: column;
+	}
+
+	.msg {
+		font-size: 30px;
+	}
+
+	.msg-bottom {
+		font-size: 20px;
+		padding: 0 30px;
+	}
+
+	.score,
+	.hi-score {
+		width: auto;
+		margin-left: 0;
+		margin-top: 20px;
+	}
+
+	.next-block,
+	.label {
+		margin-left: 0;
+	}
+
+	.controls {
+		margin-left: 0;
+		margin-top: 0;
 	}
 }
