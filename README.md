@@ -1,5 +1,5 @@
 # Tetris in vanilla javascript
-I challenged myself to code a fully functionable version of the classic tetris game in pure javascript without the help of any external libraries and tutorials. I did all the work as planned with one exception. The only feature that caused me to look into a tutorial was the rotation part. In this case I took some ideas from Turno Makes Games youtube video [How to Properly Rotate Tetris Pieces - Game Development Tutorial](https://www.youtube.com/watch?v=yIpk5TJ_uaI&t=1024s).
+I challenged myself to code a fully functionable version of the classic tetris game in pure javascript without the help of any external libraries and tutorials. I did all the work as planned with one exception. The only feature that caused me to look into a tutorial was the rotation part. In this case I took some ideas from Turbo Makes Games youtube video [How to Properly Rotate Tetris Pieces - Game Development Tutorial](https://www.youtube.com/watch?v=yIpk5TJ_uaI&t=1024s).
 
 Live version available [here](https://third-clock.surge.sh/).
 
@@ -15,8 +15,9 @@ Live version available [here](https://third-clock.surge.sh/).
 - full rows collapse 
 - points earned for completing full rows
 - game speed increase with user progress
+- pause/resume game
 
 # Controls:
-- new game - space
+- new game/pause/resume - space
 - move block - left/right/down
 - rotate block - up
