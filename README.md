@@ -9,6 +9,7 @@ Live version available [here](https://third-clock.surge.sh/).
 - grid system
 - interval based game
 - generating random blocks
+- next block preview
 - moving blocks in 3 direction with user inputs
 - rotating blocks
 - collisions detection
